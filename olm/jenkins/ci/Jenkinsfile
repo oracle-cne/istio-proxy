@@ -1,0 +1,59 @@
+{{{ $version := printf "%s.%s.%s" .major .minor .patch }}}
+@Library('olcne-pipeline') _
+import com.oracle.olcne.pipeline.BranchPattern
+
+def postBuild = {
+{{{- if semverCompare "<1.18.0" $version }}}
+    build(job: 'apps/olcne/istio/istio/' + URLEncoder.encode(env.BRANCH_NAME),
+            wait: false,
+            propagate: true,
+            parameters: [
+                    string(name: "BRANCH_NAME", value: env.BRANCH_NAME),
+                    string(name: "PLATFORM_FILTER", value: 'ol7'),
+                    booleanParam(name: "IS_MUXER_BUILD", value: true)
+            ]
+    )
+{{{- end }}}
+    build(job: 'apps/olcne/istio/istio/' + URLEncoder.encode(env.BRANCH_NAME),
+            wait: false,
+            propagate: true,
+            parameters: [
+                    string(name: "BRANCH_NAME", value: env.BRANCH_NAME),
+                    string(name: "PLATFORM_FILTER", value: 'ol8'),
+{{{- if semverCompare ">=1.18.0" $version }}}
+                    string(name: 'ARCH_FILTER', value: "${params.ARCH_FILTER}"),
+{{{- end }}}
+                    booleanParam(name: "IS_MUXER_BUILD", value: true)
+            ]
+    )
+    build(job: 'apps/olcne/istio/istio/' + URLEncoder.encode(env.BRANCH_NAME),
+        wait: false,
+        propagate: true,
+        parameters: [
+            string(name: "BRANCH_NAME", value: env.BRANCH_NAME),
+            string(name: "PLATFORM_FILTER", value: 'ol9'),
+{{{- if semverCompare ">=1.18.0" $version }}}
+            string(name: 'ARCH_FILTER', value: "${params.ARCH_FILTER}"),
+{{{- end }}}
+            booleanParam(name: "IS_MUXER_BUILD", value: true)
+        ]
+        )
+}
+
+olcnePipeline(
+  branchPattern: new BranchPattern(master: "oracle/release/{{{ .major }}}.{{{ .minor }}}.{{{ .patch }}}", feature: "feature/.*"),
+  customStages: ['container': [enabled: false]],
+  yumOL8Repos: ['ol8_appstream', 'ol8_codeready_builder', 'ol8_addons'],
+{{{- if semverCompare ">=1.18.0" $version }}}
+  builderEphemeralRequest: '30G',
+  architectures: ['x86_64', 'aarch64'],
+{{{- else }}}
+  builderEphemeralRequest: '25G',
+{{{- end }}}
+  platforms: ['ol8'],
+  customPlatformStages: [
+    customPlatformSteps: [
+      ol8: [container: [enabled: false], postBuild: [enabled: false, method: postBuild]],
+    ],
+  ],
+)

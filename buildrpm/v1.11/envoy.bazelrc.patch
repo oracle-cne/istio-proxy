@@ -1,0 +1,15 @@
+diff --git envoy.bazelrc envoy.bazelrc
+index 938e4ff3..c51b3a21 100644
+--- envoy.bazelrc
++++ envoy.bazelrc
+@@ -16,8 +16,8 @@ build --color=yes
+ build --workspace_status_command="bash bazel/get_workspace_status"
+ build --incompatible_strict_action_env
+ build --host_force_python=PY3
+-build --host_javabase=@bazel_tools//tools/jdk:remote_jdk11
+-build --javabase=@bazel_tools//tools/jdk:remote_jdk11
++build --host_javabase=@local_jdk//:jdk
++build --javabase=@local_jdk//:jdk
+ build --enable_platform_specific_config
+ 
+ # Enable position independent code (this is the default on macOS and Windows)
