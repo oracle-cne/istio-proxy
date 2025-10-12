@@ -23,9 +23,6 @@ Summary:        The Istio Proxy is a microservice proxy that can be used on the 
 License:        ASL 2.0
 Vendor:         Oracle America
 URL:            https://github.com/istio/proxy
-{{{- if semverCompare "<1.18.0" $version }}}
-ExclusiveArch:  x86_64
-{{{- end }}}
 Source0:        %{name}-%{version}.tar.bz2
 {{{- if semverCompare "<1.20.0" $version }}}
 Patch0:         Makefile.core.mk.patch
@@ -42,9 +39,7 @@ Patch0:         Makefile.core.mk_1.25.patch
 {{{- end }}}
 
 {{{- if semverCompare "<1.15.1 || >= 1.16.2" $version }}}
-{{{- if semverCompare "<1.20.0" $version }}}
-Patch1:         bazelrc.patch
-{{{- else if semverCompare "<1.22.0" $version }}}
+{{{- if semverCompare "<1.22.0" $version }}}
 Patch1:         bazelrc_1.20.patch
 {{{- else if semverCompare "<1.24.0" $version }}}
 Patch1:         bazelrc_1.22.patch
@@ -53,13 +48,6 @@ Patch1:         bazelrc_1.24.patch
 {{{- else }}}
 Patch1:         bazelrc_1.25.patch
 {{{- end }}}
-{{{- end }}}
-{{{- if semverCompare "<1.14" $version }}}
-Patch2:         envoy.bazelrc.patch
-Patch3:         BUILD.patch
-{{{- end }}}
-{{{- if semverCompare "=1.13.1" $version }}}
-Patch4:		WORKSPACE.patch
 {{{- end }}}
 
 {{{- if semverCompare "<1.22.0" $version }}}
@@ -85,15 +73,7 @@ BuildRequires:  python3
 BuildRequires:  git
 BuildRequires:  java-11-openjdk-devel
 BuildRequires:  tzdata-java
-{{{- if semverCompare "<1.13" $version }}}
-BuildRequires:  bazel = 4.1.0
-{{{- else if semverCompare "=1.13" $version }}}
-BuildRequires:  bazel = 4.2.0
-{{{- else if and (semverCompare ">1.13" $version) (semverCompare "<1.15.0" $version) }}}
-BuildRequires:  bazel = 5.1.1
-{{{- else if and (semverCompare ">=1.15.0" $version) (semverCompare "<1.18.0" $version)  }}}
-BuildRequires:  bazel = 6.0.0
-{{{- else if and (semverCompare ">=1.18.0" $version) (semverCompare "<1.22.0" $version) }}}
+{{{- if and (semverCompare ">=1.18.0" $version) (semverCompare "<1.22.0" $version) }}}
 BuildRequires:  bazel = 6.3.2
 {{{- else }}}
 BuildRequires:  bazel = 6.5.0
@@ -125,13 +105,6 @@ proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
 %patch0
 {{{- if semverCompare "<1.15.1 || >= 1.16.2" $version }}}
 %patch1
-{{{- end }}}
-{{{- if semverCompare "<1.14" $version }}}
-%patch2
-%patch3
-{{{- end }}}
-{{{- if semverCompare "=1.13.1" $version }}}
-%patch4
 {{{- end }}}
 
 %build
