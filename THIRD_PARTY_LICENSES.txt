@@ -66,14 +66,14 @@ ull ]]
 + subcomponent=
 + [[ -n '' ]]
 ++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
-++ cut -d: -f2
 ++ sed 's/^[[:space:]#/*]+//'
+++ cut -d: -f2
 ++ sort
-++ uniq
+++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 ++ tr '
 ' '
 '
-++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
+++ uniq
 + copyright_txt='Copyright 2022 Google LLC
 Copyright 2023 Google LLC
 Copyright 2024 Google LLC
@@ -183,8 +183,8 @@ ull ]]
 ++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
 ++ cut -d: -f2
 ++ sed 's/^[[:space:]#/*]+//'
-++ sort
 ++ uniq
+++ sort
 ++ tr '
 ' '
 '
