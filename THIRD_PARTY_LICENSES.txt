@@ -66,14 +66,14 @@ ull ]]
 + subcomponent=
 + [[ -n '' ]]
 ++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
+++ cut -d: -f2
+++ sed 's/^[[:space:]#/*]+//'
 ++ sort
+++ uniq
+++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 ++ tr '
 ' '
 '
-++ sed 's/^[[:space:]#/*]+//'
-++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
-++ cut -d: -f2
-++ uniq
 + copyright_txt='Copyright 2022 Google LLC
 Copyright 2023 Google LLC
 Copyright 2024 Google LLC
@@ -140,8 +140,8 @@ SPDX:Apache-2.0
 ++ echo github.com/envoyproxy/go-control-plane:v0.13.5-0.20250705082150-f8f2cd45490a
 ++ cut -d: -f1
 + pkg=github.com/envoyproxy/go-control-plane
-++ cut -d: -f2
 ++ echo github.com/envoyproxy/go-control-plane:v0.13.5-0.20250705082150-f8f2cd45490a
+++ cut -d: -f2
 + pkg_version=v0.13.5-0.20250705082150-f8f2cd45490a
 + [[ -z github.com/envoyproxy/go-control-plane ]]
 + [[ -z v0.13.5-0.20250705082150-f8f2cd45490a ]]
@@ -182,13 +182,13 @@ ull ]]
 + [[ -n '' ]]
 ++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
 ++ cut -d: -f2
+++ sed 's/^[[:space:]#/*]+//'
 ++ sort
 ++ uniq
-++ sed 's/^[[:space:]#/*]+//'
-++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 ++ tr '
 ' '
 '
+++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 + copyright_txt='Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
 Copyright 2018 Envoyproxy Authors
 Copyright 2019 Envoyproxy Authors
