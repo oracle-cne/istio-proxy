@@ -65,15 +65,15 @@ ull ]]
 ++ find . -type d -name '' -print -quit
 + subcomponent=
 + [[ -n '' ]]
-++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
-++ uniq
-++ sort
-++ sed 's/^[[:space:]#/*]+//'
-++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 ++ cut -d: -f2
+++ sed 's/^[[:space:]#/*]+//'
+++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
+++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 ++ tr '
 ' '
 '
+++ sort
+++ uniq
 + copyright_txt='Copyright 2022 Google LLC
 Copyright 2023 Google LLC
 Copyright 2024 Google LLC
@@ -165,8 +165,8 @@ ull ]]
 + [[ -z https://github.com/envoyproxy/go-control-plane ]]
 + [[ https://github.com/envoyproxy/go-control-plane = 
 ull ]]
-++ echo https://github.com/envoyproxy/go-control-plane
 ++ sed 's|/v[0-9]+/*$||'
+++ echo https://github.com/envoyproxy/go-control-plane
 + pkg_github_url=https://github.com/envoyproxy/go-control-plane
 + trimmed_dir=
 + [[ https://github.com/envoyproxy/go-control-plane != h		ps://gi	hu.com ]]
