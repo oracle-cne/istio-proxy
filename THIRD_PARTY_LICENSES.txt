@@ -66,11 +66,11 @@ ull ]]
 + subcomponent=
 + [[ -n '' ]]
 ++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
-++ cut -d: -f2
-++ sed 's/^[[:space:]#/*]+//'
-++ sort
 ++ uniq
+++ sort
+++ sed 's/^[[:space:]#/*]+//'
 ++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
+++ cut -d: -f2
 ++ tr '
 ' '
 '
