@@ -65,15 +65,15 @@ ull ]]
 ++ find . -type d -name '' -print -quit
 + subcomponent=
 + [[ -n '' ]]
-++ cut -d: -f2
-++ sed 's/^[[:space:]#/*]+//'
 ++ grep -rIE '^(s**|//|#)?s*Copyright( ©)?( [0-9]{4})? .+' --exclude-dir=vendor --exclude-dir=.git .
+++ sort
 ++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
+++ uniq
+++ sed 's/^[[:space:]#/*]+//'
+++ cut -d: -f2
 ++ tr '
 ' '
 '
-++ sort
-++ uniq
 + copyright_txt='Copyright 2022 Google LLC
 Copyright 2023 Google LLC
 Copyright 2024 Google LLC
@@ -165,8 +165,8 @@ ull ]]
 + [[ -z https://github.com/envoyproxy/go-control-plane ]]
 + [[ https://github.com/envoyproxy/go-control-plane = 
 ull ]]
-++ sed 's|/v[0-9]+/*$||'
 ++ echo https://github.com/envoyproxy/go-control-plane
+++ sed 's|/v[0-9]+/*$||'
 + pkg_github_url=https://github.com/envoyproxy/go-control-plane
 + trimmed_dir=
 + [[ https://github.com/envoyproxy/go-control-plane != h		ps://gi	hu.com ]]
@@ -185,10 +185,10 @@ ull ]]
 ++ sed 's/^[[:space:]#/*]+//'
 ++ sort
 ++ uniq
-++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 ++ tr '
 ' '
 '
+++ grep -vIE '^s*(*|//|#)?s*Copyrights*(()?(c|C|©)?())?s+([[|{|<]?(yyyy|[0-9]{4}|year)?[]|}|>]?)?s+([[|{|<]?(name of copyright owner|name of author)[]|}|>]?)?s*$'
 + copyright_txt='Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
 Copyright 2018 Envoyproxy Authors
 Copyright 2019 Envoyproxy Authors
