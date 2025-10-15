@@ -1,0 +1,62 @@
+diff --git Makefile.core.mk Makefile.core.mk
+index 757eeb2d..49058015 100644
+--- Makefile.core.mk
++++ Makefile.core.mk
+@@ -26,6 +26,14 @@ HUB ?=
+ TAG ?=
+ repo_dir := .
+ 
++ifeq "$(origin CC)" "default"
++CC := clang
++endif
++ifeq "$(origin CXX)" "default"
++CXX := clang++
++endif
++PATH := /usr/lib/llvm-10/bin:$(PATH)
++
+ VERBOSE ?=
+ ifeq "$(VERBOSE)" "1"
+ BAZEL_STARTUP_ARGS := --client_debug $(BAZEL_STARTUP_ARGS)
+@@ -53,6 +61,7 @@ TEST_ENVOY_TARGET ?= //:envoy
+ TEST_ENVOY_DEBUG ?= trace
+ 
+ build:
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && \
+ 	bazel $(BAZEL_STARTUP_ARGS) build $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TARGETS)
+ 
+ build_envoy: BAZEL_CONFIG_CURRENT = $(BAZEL_CONFIG_REL)
+@@ -84,9 +93,10 @@ gen-check:
+ 	@scripts/gen-testdata.sh -c
+ 
+ test:
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && \
+ 	bazel $(BAZEL_STARTUP_ARGS) build $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(TEST_ENVOY_TARGET) $(BAZEL_TEST_TARGETS)
+ 	if [ -n "$(BAZEL_TEST_TARGETS)" ]; then \
+-	  bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TEST_TARGETS); \
++	  export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TEST_TARGETS); \
+ 	fi
+ 	if [ -n "$(E2E_TEST_TARGETS)" ]; then \
+	  env ENVOY_DEBUG=$(TEST_ENVOY_DEBUG) ENVOY_PATH=$(shell bazel info $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) bazel-bin)/envoy $(E2E_TEST_ENVS) GO111MODULE=on go test -timeout 30m $(E2E_TEST_FLAGS) $(E2E_TEST_TARGETS); \
+@@ -135,18 +145,18 @@ extensions-docs:  $(metadata_exchange_docs) $(stackdriver_docs) $(accesslog_poli
+ 
+ test_release:
+ ifeq "$(shell uname -m)" "x86_64"
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh
+ else
+ 	# Only x86 has support for legacy GLIBC, otherwise pass -i to skip the check
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i
+ endif
+ 
+ push_release:
+ ifeq "$(shell uname -m)" "x86_64"
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
+ else
+ 	# Only x86 has support for legacy GLIBC, otherwise pass -i to skip the check
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
+ endif
+ 
+ # Used by build container to export the build output from the docker volume cache
