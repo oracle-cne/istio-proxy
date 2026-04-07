@@ -76,10 +76,14 @@ alternatives --set python /usr/bin/python2
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 export GOROOT=/usr/bin/go
 mkdir -p /tmp/envoy-src
-envoy_src_rpm_version=$(repoquery --show-duplicates  istio-envoy-1.27.*  -q --qf "%{version}" | tail -1)
+envoy_src_rpm_version=$(repoquery --show-duplicates 'istio-envoy-1.27.*' -q --qf "%%{version}-%%{release}" | tail -1)
+if [ -z "${envoy_src_rpm_version}" ]; then
+echo "No matching istio-envoy-1.27.* package found in configured repositories" >&2
+exit 1
+fi
 envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
 pushd /tmp/envoy-src
-yumdownloader --source istio-envoy-%{version}-%{release}
+yumdownloader --source ${envoy_src_rpm}
 rpm2cpio ${envoy_src_rpm}*.rpm|cpio -iv --to-stdout ${envoy_src_rpm}.tar.bz2 > ${envoy_src_rpm}.tar.bz2
 tar -xjvf ${envoy_src_rpm}.tar.bz2
 popd
