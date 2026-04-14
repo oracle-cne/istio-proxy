@@ -15,7 +15,8 @@ if [[ $(version $istio_version) -ge $(version "1.18.0") ]]; then
     cpu_count="16"
 fi
 
-BAZEL_BUILD=' --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG'
+BAZEL_BUILD=' --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled'
+BAZEL_TARGETS=//:envoy
 if [[ $(version $istio_version) -lt $(version "1.10.0")  \
      ||  $(version $istio_version) -ge $(version "1.15.0") ]]; then
     ENVOY_REPO=--override_repository=envoy="${LOCAL_ENVOY_PROJECT}"
@@ -25,6 +26,7 @@ else
 fi
 BAZEL_BUILD_LOG="/tmp/build.log"
 export BAZEL_BUILD_ARGS
+export BAZEL_TARGETS
 
 if [[ -f ~/.npmrc ]]; then
     cp -f ~/.npmrc /mnt/.npmrc
