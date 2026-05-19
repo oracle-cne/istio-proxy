@@ -79,7 +79,7 @@ mkdir -p /tmp/envoy-src
 envoy_src_rpm_version=$(repoquery --show-duplicates  istio-envoy-1.29.*  -q --qf "%{version}" | tail -1)
 envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
 pushd /tmp/envoy-src
-yumdownloader --source istio-envoy-%{version}-%{release}
+yumdownloader --source ${envoy_src_rpm}
 rpm2cpio ${envoy_src_rpm}*.rpm|cpio -iv --to-stdout ${envoy_src_rpm}.tar.bz2 > ${envoy_src_rpm}.tar.bz2
 tar -xjvf ${envoy_src_rpm}.tar.bz2
 popd
