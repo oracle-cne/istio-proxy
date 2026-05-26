@@ -75,17 +75,13 @@ proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
 alternatives --set python /usr/bin/python2
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 export GOROOT=/usr/bin/go
-mkdir -p /tmp/envoy-src
 envoy_src_rpm_version=$(repoquery --show-duplicates  istio-envoy-1.29.*  -q --qf "%{version}" | tail -1)
 envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
-pushd /tmp/envoy-src
 yumdownloader --source ${envoy_src_rpm}
 rpm2cpio ${envoy_src_rpm}*.rpm|cpio -iv --to-stdout ${envoy_src_rpm}.tar.bz2 > ${envoy_src_rpm}.tar.bz2
 tar -xjvf ${envoy_src_rpm}.tar.bz2
-popd
 
-export LOCAL_ENVOY_PROJECT=/tmp/envoy-src/${envoy_src_rpm}
-ln -s /usr/lib64/libatomic.so.1.2.0 /usr/lib64/libatomic.so
+export LOCAL_ENVOY_PROJECT=${PWD}/${envoy_src_rpm}
 
 chmod +x build_istio_proxy.sh
 ./build_istio_proxy.sh %{version}
