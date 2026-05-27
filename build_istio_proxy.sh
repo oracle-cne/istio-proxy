@@ -36,6 +36,16 @@ if [[ $(version $istio_version) -ge $(version "1.17.0") ]]; then
     ENVOY_BIN=./bazel-bin/envoy
 fi
 
+# Envoy's emsdk patch wires in Python 3.12.3 via rules_python, but the patched
+# emsdk target is still a native py_binary that only accepts PY2/PY3.
+if [[ -n "${LOCAL_ENVOY_PROJECT:-}" ]] \
+   && [[ -f "${LOCAL_ENVOY_PROJECT}/bazel/repositories_extra.bzl" ]] \
+   && [[ -f "${LOCAL_ENVOY_PROJECT}/bazel/repositories.bzl" ]] \
+   && grep -q 'PYTHON_VERSION = "3.12.3"' "${LOCAL_ENVOY_PROJECT}/bazel/repositories_extra.bzl"; then
+    sed -i '/patches = \["@envoy\/\/bazel:emsdk.patch"\],/d' \
+        "${LOCAL_ENVOY_PROJECT}/bazel/repositories.bzl"
+fi
+
 # Build istio proxy
 ## Added workaround for jenkins build failure,
 ## 'FATAL: Attempted to kill stale server process (pid=365) using SIGKILL, but it did not die in a timely fashion.'
