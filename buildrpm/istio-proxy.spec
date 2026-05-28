@@ -43,7 +43,7 @@ BuildRequires:  python3
 BuildRequires:  git
 BuildRequires:  java-11-openjdk-devel
 BuildRequires:  tzdata-java
-BuildRequires:  bazel = 6.5.0
+BuildRequires:  bazel = 7.7.1
 BuildRequires:  ninja-build
 BuildRequires:  autoconf
 BuildRequires:  automake
