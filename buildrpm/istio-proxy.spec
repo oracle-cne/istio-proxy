@@ -41,7 +41,7 @@ BuildRequires:  cmake3 = 3.11.4
 BuildRequires:  python2
 BuildRequires:  python3
 BuildRequires:  git
-BuildRequires:  java-11-openjdk-devel
+BuildRequires:  java-21-openjdk-devel
 BuildRequires:  tzdata-java
 BuildRequires:  bazel = 7.7.1
 BuildRequires:  ninja-build
@@ -73,7 +73,7 @@ proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
 
 %build
 alternatives --set python /usr/bin/python2
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 export GOROOT=/usr/bin/go
 envoy_src_rpm_version=$(repoquery --show-duplicates  istio-envoy-1.29.*  -q --qf "%{version}" | tail -1)
 envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
