@@ -79,7 +79,7 @@ envoy_src_rpm_version=$(repoquery --show-duplicates  istio-envoy-1.29.*  -q --qf
 envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
 yumdownloader --source ${envoy_src_rpm}
 rpm2cpio ${envoy_src_rpm}*.rpm|cpio -iv --to-stdout ${envoy_src_rpm}.tar.bz2 > ${envoy_src_rpm}.tar.bz2
-tar -xjvf ${envoy_src_rpm}.tar.bz2
+tar -xjf ${envoy_src_rpm}.tar.bz2
 
 export LOCAL_ENVOY_PROJECT=${PWD}/${envoy_src_rpm}
 
