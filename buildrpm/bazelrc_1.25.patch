@@ -11,7 +11,7 @@ index 364b1971..5359bb90 100644
  
  # put /usr/local/bin before /usr/bin to avoid picking up wrong python3.6 when building envoy.tls.key_providers.cryptomb
  build:linux --action_env=PATH=/usr/local/bin:/bin:/usr/bin
-@@ -56,13 +56,17 @@ build:release-symbol -c opt
+@@ -56,13 +56,18 @@ build:release-symbol -c opt
  build:release-symbol -c opt
  
  # Debug builds
@@ -27,6 +27,7 @@ index 364b1971..5359bb90 100644
 +build --cxxopt --no-warnings
 +build --cxxopt -Wno-missing-field-initializers
 +build --cxxopt -w
++build --host_linkopt=-fuse-ld=lld
  
  # CI sanitizer configuration
  #
