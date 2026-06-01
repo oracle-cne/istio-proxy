@@ -30,3 +30,14 @@ index 364b1971..5359bb90 100644
  
  # CI sanitizer configuration
  #
+diff --git WORKSPACE WORKSPACE
+index 0108e5d2..0d762f3b 100644
+--- WORKSPACE
++++ WORKSPACE
+@@ -90,5 +90,5 @@
+ envoy_toolchains()
+ 
+ load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")
+ 
+-llvm_register_toolchains()
++# llvm_register_toolchains()
