@@ -26,9 +26,9 @@ URL:            https://github.com/istio/proxy
 Source0:        %{name}-%{version}.tar.bz2
 Patch0:         Makefile.core.mk_1.25.patch
 Patch1:         bazelrc_1.25.patch
-BuildRequires:  lld = 13.0.1
-BuildRequires:  llvm-toolset = 13.0.1
-BuildRequires:  clang = 13.0.1
+BuildRequires:  lld = 21.1.8
+BuildRequires:  llvm-toolset = 21.1.8
+BuildRequires:  clang = 21.1.8
 BuildRequires:  automake
 BuildRequires:  autoconf
 BuildRequires:  autogen
@@ -41,9 +41,9 @@ BuildRequires:  cmake3 = 3.11.4
 BuildRequires:  python2
 BuildRequires:  python3
 BuildRequires:  git
-BuildRequires:  java-11-openjdk-devel
+BuildRequires:  java-21-openjdk-devel
 BuildRequires:  tzdata-java
-BuildRequires:  bazel = 6.5.0
+BuildRequires:  bazel = 7.7.1
 BuildRequires:  ninja-build
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -73,7 +73,7 @@ proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
 
 %build
 alternatives --set python /usr/bin/python2
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 export GOROOT=/usr/bin/go
 envoy_src_rpm_version=$(repoquery --show-duplicates  istio-envoy-1.28.*  -q --qf "%{version}" | tail -1)
 envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"

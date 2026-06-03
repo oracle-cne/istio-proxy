@@ -15,7 +15,7 @@ if [[ $(version $istio_version) -ge $(version "1.18.0") ]]; then
     cpu_count="16"
 fi
 
-BAZEL_BUILD=' --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled'
+BAZEL_BUILD=' --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled --linkopt=-latomic --host_linkopt=-latomic '
 BAZEL_TARGETS=//:envoy
 if [[ $(version $istio_version) -lt $(version "1.10.0")  \
      ||  $(version $istio_version) -ge $(version "1.15.0") ]]; then
