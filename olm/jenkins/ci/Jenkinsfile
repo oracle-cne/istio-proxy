@@ -1,0 +1,40 @@
+
+@Library('olcne-pipeline') _
+import com.oracle.olcne.pipeline.BranchPattern
+
+def postBuild = {
+    build(job: 'apps/olcne/istio/istio/' + URLEncoder.encode(env.BRANCH_NAME),
+            wait: false,
+            propagate: true,
+            parameters: [
+                    string(name: "BRANCH_NAME", value: env.BRANCH_NAME),
+                    string(name: "PLATFORM_FILTER", value: 'ol8'),
+                    string(name: 'ARCH_FILTER', value: "${params.ARCH_FILTER}"),
+                    booleanParam(name: "IS_MUXER_BUILD", value: true)
+            ]
+    )
+    build(job: 'apps/olcne/istio/istio/' + URLEncoder.encode(env.BRANCH_NAME),
+        wait: false,
+        propagate: true,
+        parameters: [
+            string(name: "BRANCH_NAME", value: env.BRANCH_NAME),
+            string(name: "PLATFORM_FILTER", value: 'ol9'),
+            string(name: 'ARCH_FILTER', value: "${params.ARCH_FILTER}"),
+            booleanParam(name: "IS_MUXER_BUILD", value: true)
+        ]
+        )
+}
+
+olcnePipeline(
+  branchPattern: new BranchPattern(master: "oracle/release/1.28.6", feature: '(?!^release/.*$)(^.*$)'),
+  customStages: ['container': [enabled: false]],
+  yumOL8Repos: ['ol8_appstream', 'ol8_codeready_builder', 'ol8_addons'],
+  builderEphemeralRequest: '30G',
+  architectures: ['x86_64', 'aarch64'],
+  platforms: ['ol8'],
+  customPlatformStages: [
+    customPlatformSteps: [
+      ol8: [container: [enabled: false], postBuild: [enabled: false, method: postBuild]],
+    ],
+  ],
+)
