@@ -48,6 +48,10 @@ local_repository(
     path = "bazel/extension_config",
 )
 
+load("//bazel/host_platform:repository.bzl", "host_platform_repo")
+
+host_platform_repo(name = "host_platform")
+
 envoy_api_binding()
 
 load("@envoy//bazel:api_repositories.bzl", "envoy_api_dependencies")
