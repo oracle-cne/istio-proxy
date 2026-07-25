@@ -6,12 +6,12 @@ index 364b1971..5359bb90 100644
  # ========================================
  
  # Enable libc++ and C++20 by default.
--build:linux --config=libc++20
-+#build:linux --config=libc++20
+-build:linux --config=clang
++#build:linux --config=clang
  
  # put /usr/local/bin before /usr/bin to avoid picking up wrong python3.6 when building envoy.tls.key_providers.cryptomb
  build:linux --action_env=PATH=/usr/lib/llvm/bin:/usr/local/bin:/bin:/usr/bin
-@@ -42,13 +42,17 @@ build:release --strip=always
+@@ -42,13 +42,19 @@ build:release --strip=always
  build:release-symbol -c opt
  
  # Debug builds
@@ -27,6 +27,8 @@ index 364b1971..5359bb90 100644
 +build --cxxopt --no-warnings
 +build --cxxopt -Wno-missing-field-initializers
 +build --cxxopt -w
++build --linkopt=-fuse-ld=lld
++build --host_linkopt=-fuse-ld=lld
 
  build:clang --host_action_env=CC=
  build:clang --host_action_env=CXX=
