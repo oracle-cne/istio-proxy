@@ -26,9 +26,9 @@ URL:            https://github.com/istio/proxy
 Source0:        %{name}-%{version}.tar.bz2
 Patch0:         Makefile.core.mk_1.25.patch
 Patch1:         bazelrc_1.25.patch
-BuildRequires:  lld = 19.1.7
-BuildRequires:  llvm-toolset = 19.1.7
-BuildRequires:  clang = 19.1.7
+BuildRequires:  lld = 14.0.6
+BuildRequires:  llvm-toolset = 14.0.6
+BuildRequires:  clang = 14.0.6
 BuildRequires:  automake
 BuildRequires:  autoconf
 BuildRequires:  autogen
