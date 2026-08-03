@@ -50,6 +50,7 @@ BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  golang
 BuildRequires:  wget
+BuildRequires:  ncurses-compat-libs
 
 
 %description
