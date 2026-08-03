@@ -15,16 +15,13 @@ if [[ $(version $istio_version) -ge $(version "1.18.0") ]]; then
     cpu_count="16"
 fi
 
-BAZEL_BUILD=' --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG'
-if [[ $(version $istio_version) -lt $(version "1.10.0")  \
-     ||  $(version $istio_version) -ge $(version "1.15.0") ]]; then
-    ENVOY_REPO=--override_repository=envoy="${LOCAL_ENVOY_PROJECT}"
-    BAZEL_BUILD_ARGS="$ENVOY_REPO$BAZEL_BUILD"
-else
-    BAZEL_BUILD_ARGS="$BAZEL_BUILD"
-fi
+BAZEL_BUILD=' --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled'
+BAZEL_TARGETS=//:envoy
+ENVOY_REPO=--override_repository=envoy="${LOCAL_ENVOY_PROJECT}"
+BAZEL_BUILD_ARGS="$ENVOY_REPO$BAZEL_BUILD"
 BAZEL_BUILD_LOG="/tmp/build.log"
 export BAZEL_BUILD_ARGS
+export BAZEL_TARGETS
 
 if [[ -f ~/.npmrc ]]; then
     cp -f ~/.npmrc /mnt/.npmrc
@@ -39,7 +36,7 @@ fi
 # Build istio proxy
 ## Added workaround for jenkins build failure,
 ## 'FATAL: Attempted to kill stale server process (pid=365) using SIGKILL, but it did not die in a timely fashion.'
-nohup make VERBOSE=1 build -j${cpu_count} > $BAZEL_BUILD_LOG 2>&1 | tail -f $BAZEL_BUILD_LOG &
+nohup make build -j${cpu_count} > $BAZEL_BUILD_LOG 2>&1 | tail -f $BAZEL_BUILD_LOG &
 # There are 'build success' messages in-between, so, check the last line of log file for success completion.
 # And, precense of envoy binary doesn't mean the build completion.
 while [[ ! (((-f $ENVOY_BIN) \

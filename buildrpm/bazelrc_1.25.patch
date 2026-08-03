@@ -2,7 +2,10 @@ diff --git .bazelrc .bazelrc
 index 364b1971..5359bb90 100644
 --- .bazelrc
 +++ .bazelrc
-@@ -42,13 +42,17 @@ build:release --strip=always
+@@ -17 +17 @@ build:linux --config=clang
+-build:linux --config=clang
++#build:linux --config=clang
+@@ -42,13 +42,19 @@ build:release --strip=always
  build:release-symbol -c opt
  
  # Debug builds
@@ -18,6 +21,8 @@ index 364b1971..5359bb90 100644
 +build --cxxopt --no-warnings
 +build --cxxopt -Wno-missing-field-initializers
 +build --cxxopt -w
++build --linkopt=-fuse-ld=lld
++build --host_linkopt=-fuse-ld=lld
 
  build:clang --host_action_env=CC=
  build:clang --host_action_env=CXX=
