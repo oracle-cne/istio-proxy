@@ -56,9 +56,7 @@ SPDX:Apache-2.0
 
 == Copyright
 Copyright 2018 Envoyproxy Authors
-Copyright 2019 Envoyproxy Authors
 Copyright 2020 Envoyproxy Authors
-Copyright 2022 Envoyproxy Authors
 
 --------------------------------- (separator) ----------------------------------
 
@@ -162,15 +160,9 @@ SPDX:BSD-3-Clause--modified-by-Google
 == Copyright
 Copyright 2010 The Go Authors.  All rights reserved.
 Copyright 2010 The Go Authors. All rights reserved.
-Copyright 2011 The Go Authors. All rights reserved.
-Copyright 2014 The Go Authors. All rights reserved.
-Copyright 2015 The Go Authors.  All rights reserved.
 Copyright 2015 The Go Authors. All rights reserved.
-Copyright 2016 The Go Authors. All rights reserved.
-Copyright 2017 The Go Authors. All rights reserved.
 Copyright 2018 The Go Authors. All rights reserved.
 Copyright 2019 The Go Authors. All rights reserved.
-Copyright 2020 The Go Authors. All rights reserved.
 
 --------------------------------- (separator) ----------------------------------
 
@@ -227,7 +219,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 == Copyright
 Copyright (c) 2015, Gengo, Inc.
 Copyright 2009 The Go Authors. All rights reserved.
-Copyright 2010, 2019 The Go Authors.  All rights reserved.
 
 --------------------------------- (separator) ----------------------------------
 
@@ -262,14 +253,7 @@ Copyright (c) 2011, Open Knowledge Foundation Ltd.
 Copyright 2013 The Prometheus Authors
 Copyright 2014 The Prometheus Authors
 Copyright 2015 The Prometheus Authors
-Copyright 2016 The Prometheus Authors
-Copyright 2017 The Prometheus Authors
-Copyright 2018 The Prometheus Authors
-Copyright 2019 The Prometheus Authors
 Copyright 2020 The Prometheus Authors
-Copyright 2020 The Prometheus-operator Authors
-Copyright 2021 The Prometheus Authors
-Copyright 2022 The Prometheus Authors
 Copyright 2023 The Prometheus Authors
 
 == Notices
@@ -302,12 +286,8 @@ SPDX:BSD-3-Clause
 
 == Copyright
 Copyright (c) 2017 The Bazel Authors.  All rights reserved.
-Copyright (c) 2018 The Bazel Authors.
 Copyright 2017 The Bazel Authors. All rights reserved.
-Copyright 2018 The Bazel Authors. All rights reserved.
 Copyright 2019 The Bazel Authors. All rights reserved.
-Copyright 2020 The Bazel Authors. All rights reserved.
-Copyright 2021 The Bazel Authors. All rights reserved.
 Copyright 2023 The Bazel Authors. All rights reserved.
 
 --------------------------------- (separator) ----------------------------------
@@ -349,20 +329,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 == Copyright
 Copyright 2009 The Go Authors.
-Copyright 2009 The Go Authors. All rights reserved.
-Copyright 2010 The Go Authors. All rights reserved.
-Copyright 2011 The Go Authors. All rights reserved.
-Copyright 2012 The Go Authors. All rights reserved.
-Copyright 2013 The Go Authors. All rights reserved.
 Copyright 2014 The Go Authors. All rights reserved.
 Copyright 2015 The Go Authors. All rights reserved.
 Copyright 2016 The Go Authors. All rights reserved.
 Copyright 2017 The Go Authors. All rights reserved.
 Copyright 2018 The Go Authors. All rights reserved.
-Copyright 2019 The Go Authors. All rights reserved.
-Copyright 2020 The Go Authors. All rights reserved.
 Copyright 2021 The Go Authors. All rights reserved.
-Copyright 2022 The Go Authors. All rights reserved.
 Copyright 2023 The Go Authors. All rights reserved.
 Copyright 2024 The Go Authors. All rights reserved.
 Copyright 2025 The Go Authors. All rights reserved.
@@ -440,7 +412,6 @@ Copyright 2013 The Go Authors. All rights reserved.
 Copyright 2014 The Go Authors. All rights reserved.
 Copyright 2015 The Go Authors. All rights reserved.
 Copyright 2016 The Go Authors. All rights reserved.
-Copyright 2017 The Go Authors. All right reserved.
 Copyright 2017 The Go Authors. All rights reserved.
 Copyright 2018 The Go Authors. All rights reserved.
 Copyright 2019 The Go Authors. All rights reserved.
@@ -515,17 +486,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 == Copyright
 Copyright 2009 The Go Authors.
-Copyright 2009 The Go Authors. All rights reserved.
 Copyright 2011 The Go Authors. All rights reserved.
-Copyright 2012 The Go Authors. All rights reserved.
 Copyright 2013 The Go Authors. All rights reserved.
-Copyright 2014 The Go Authors. All rights reserved.
 Copyright 2015 The Go Authors. All rights reserved.
 Copyright 2016 The Go Authors. All rights reserved.
-Copyright 2017 The Go Authors. All rights reserved.
-Copyright 2018 The Go Authors. All rights reserved.
-Copyright 2019 The Go Authors. All rights reserved.
-Copyright 2021 The Go Authors. All rights reserved.
 
 == Patents
 Additional IP Rights Grant (Patents)
@@ -586,20 +550,17 @@ SPDX:Apache-2.0
 Copyright 2014 gRPC authors.
 Copyright 2015 The gRPC Authors
 Copyright 2015 gRPC authors.
-Copyright 2015-2016 gRPC authors.
 Copyright 2016 The gRPC Authors
 Copyright 2016 gRPC authors.
 Copyright 2017 gRPC authors.
 Copyright 2018 The gRPC Authors
 Copyright 2018 gRPC authors.
 Copyright 2019 gRPC authors.
-Copyright 2020 The gRPC Authors
 Copyright 2020 gRPC authors.
 Copyright 2021 gRPC authors.
 Copyright 2022 gRPC authors.
 Copyright 2023 gRPC authors.
 Copyright 2024 gRPC authors.
-Copyright 2025 gRPC authors.
 
 == Notices
 Copyright 2014 gRPC authors.
@@ -629,17 +590,12 @@ SPDX:BSD-3-Clause--modified-by-Google
 Copyright (c) 2018 The Go Authors. All rights reserved.
 Copyright 2008 Google Inc.  All rights reserved.
 Copyright 2018 The Go Authors. All rights reserved.
-Copyright 2018 The Go Authors. All rights reserved.",
 Copyright 2019 The Go Authors. All rights reserved.
-Copyright 2019 The Go Authors. All rights reserved.",
 Copyright 2020 The Go Authors. All rights reserved.
-Copyright 2021 The Go Authors. All rights reserved.
 Copyright 2022 The Go Authors. All rights reserved.
 Copyright 2023 Google Inc.  All rights reserved.
 Copyright 2023 The Go Authors. All rights reserved.
-Copyright 2024 Google Inc.  All rights reserved.
 Copyright 2024 The Go Authors. All rights reserved.
-Copyright 2025 The Go Authors. All rights reserved.
 
 == Patents
 Additional IP Rights Grant (Patents)
@@ -1024,8 +980,6 @@ Copyright (c) 2014 Sam Ghods
 Copyright 2011-2016 Canonical Ltd.
 Copyright 2013 The Go Authors. All rights reserved.
 Copyright 2021 The Kubernetes Authors.
-Copyright 2022 The Kubernetes Authors.
-Copyright 2023 The Kubernetes Authors.
 
 ----------------------------------- Licenses -----------------------------------
 
