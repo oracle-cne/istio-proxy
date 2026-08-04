@@ -15,7 +15,8 @@ if [[ $(version $istio_version) -ge $(version "1.18.0") ]]; then
     cpu_count="16"
 fi
 
-BAZEL_BUILD=' --repo_env=BAZEL_LLVM_PATH=/usr --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled'
+BAZEL_BUILD=' --repo_env=BAZEL_LLVM_PATH=/usr --repo_env=BAZEL_USE_HOST_SYSROOT=True --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled'
+echo "Using host sysroot for the local LLVM toolchain"
 BAZEL_TARGETS=//:envoy
 ENVOY_REPO=--override_repository=envoy="${LOCAL_ENVOY_PROJECT}"
 BAZEL_BUILD_ARGS="$ENVOY_REPO$BAZEL_BUILD"
