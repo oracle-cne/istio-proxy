@@ -32,6 +32,7 @@ BuildRequires:  llvm-toolset = 18.1.8
 BuildRequires:  clang = 18.1.8
 BuildRequires:  automake
 BuildRequires:  autoconf
+BuildRequires:  autoconf-archive
 BuildRequires:  autogen
 BuildRequires:  libtool
 BuildRequires:  libatomic-static
