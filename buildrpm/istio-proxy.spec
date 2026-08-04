@@ -35,6 +35,7 @@ BuildRequires:  autogen
 BuildRequires:  libtool
 BuildRequires:  libatomic-static
 BuildRequires:  libstdc++-static
+BuildRequires:  libstdc++-devel
 BuildRequires:  gcc-c++
 BuildRequires:  perl
 BuildRequires:  cmake3 = 3.11.4
