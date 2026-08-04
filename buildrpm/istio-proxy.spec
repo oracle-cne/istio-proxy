@@ -26,6 +26,7 @@ URL:            https://github.com/istio/proxy
 Source0:        %{name}-%{version}.tar.bz2
 Patch0:         Makefile.core.mk_1.25.patch
 Patch1:         bazelrc_1.25.patch
+Patch2:         WORKSPACE_1.25.patch
 BuildRequires:  lld = 18.1.8
 BuildRequires:  llvm-toolset = 18.1.8
 BuildRequires:  clang = 18.1.8
@@ -72,6 +73,7 @@ proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
 %setup -q -n %{name}-%{version}
 %patch0
 %patch1
+%patch2
 
 %build
 alternatives --set python /usr/bin/python2
