@@ -15,7 +15,9 @@ if [[ $(version $istio_version) -ge $(version "1.18.0") ]]; then
     cpu_count="16"
 fi
 
-BAZEL_BUILD=' --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG'
+BAZEL_BUILD=' --repo_env=BAZEL_USE_HOST_SYSROOT=True --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled'
+echo "Using Bazel host C++ toolchain discovery with system headers"
+BAZEL_TARGETS=//:envoy
 if [[ $(version $istio_version) -lt $(version "1.10.0")  \
      ||  $(version $istio_version) -ge $(version "1.15.0") ]]; then
     ENVOY_REPO=--override_repository=envoy="${LOCAL_ENVOY_PROJECT}"
@@ -25,6 +27,7 @@ else
 fi
 BAZEL_BUILD_LOG="/tmp/build.log"
 export BAZEL_BUILD_ARGS
+export BAZEL_TARGETS
 
 if [[ -f ~/.npmrc ]]; then
     cp -f ~/.npmrc /mnt/.npmrc
@@ -51,3 +54,8 @@ done
 set +e
 ps ax | grep bazel | grep -v color=auto | awk '{print $1}'|xargs kill -9
 set -e
+
+if grep -q "Build did NOT complete successfully" "${BAZEL_BUILD_LOG}"; then
+    echo "Bazel build failed; refusing to continue without ${ENVOY_BIN}" >&2
+    exit 1
+fi
