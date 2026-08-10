@@ -1,0 +1,128 @@
+
+# Generate devel rpm
+%global with_devel 0
+# Build with debug info rpm
+%global with_debug 0
+
+%if 0%{?with_debug}
+%global _dwz_low_mem_die_limit 0
+%else
+%global debug_package   %{nil}
+%endif
+
+%global envoy_libdir /var/lib/istio/envoy
+%global _buildhost   build-ol%{?oraclelinux}-%{?_arch}.oracle.com
+
+
+%define minor_version 27
+
+Name:           istio-proxy
+Version:        1.27.9
+Release:        1%{?dist}
+Summary:        The Istio Proxy is a microservice proxy that can be used on the client and server side, and forms a microservice mesh. The Proxy supports a large number of features.
+License:        ASL 2.0
+Vendor:         Oracle America
+URL:            https://github.com/istio/proxy
+Source0:        %{name}-%{version}.tar.bz2
+Patch0:         Makefile.core.mk_1.25.patch
+Patch1:         bazelrc_1.25.patch
+BuildRequires:  lld = 18.1.8
+BuildRequires:  llvm-toolset = 18.1.8
+BuildRequires:  clang = 18.1.8
+BuildRequires:  automake
+BuildRequires:  autoconf
+BuildRequires:  autogen
+BuildRequires:  libtool
+BuildRequires:  libatomic-static
+BuildRequires:  libstdc++-static
+BuildRequires:  gcc-c++
+BuildRequires:  perl
+BuildRequires:  cmake3 = 3.11.4
+BuildRequires:  python2
+BuildRequires:  python3
+BuildRequires:  git
+BuildRequires:  java-21-openjdk-devel
+BuildRequires:  tzdata-java
+BuildRequires:  bazel = 7.7.1
+BuildRequires:  ninja-build
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  golang
+BuildRequires:  wget
+
+
+%description
+The Istio Proxy is a microservice proxy that can be used on the client and server side, and forms a microservice mesh. The Proxy supports a large number of features.
+
+########### istio-proxy ###############
+%package proxy
+Summary:  The istio envoy proxy
+
+%description proxy
+The Istio Proxy is a microservice proxy that can be used on the client and server side, and forms a microservice mesh. The Proxy supports a large number of features.
+
+This package contains the envoy program.
+
+proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
+
+%prep
+%setup -q -n %{name}-%{version}
+%patch0
+%patch1
+
+%build
+alternatives --set python /usr/bin/python2
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+export GOROOT=/usr/bin/go
+echo "Querying istio-envoy 1.27 source RPM versions"
+envoy_src_rpm_version=$(repoquery --show-duplicates 'istio-envoy-1.27.*' -q --qf "%%{version}-%%{release}" | tail -1)
+if [ -z "${envoy_src_rpm_version}" ]; then
+echo "No matching istio-envoy-1.27.* package found in configured repositories" >&2
+exit 1
+fi
+envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
+envoy_src_dir="istio-envoy-${envoy_src_rpm_version%%-*}"
+envoy_src_tar="${envoy_src_dir}.tar.bz2"
+echo "Selected istio-envoy source RPM: ${envoy_src_rpm}"
+echo "Expected istio-envoy source archive inside RPM: ${envoy_src_tar}"
+yumdownloader --source "${envoy_src_rpm}"
+echo "Extracting ${envoy_src_tar} from ${envoy_src_rpm} source RPM"
+rpm2cpio "${envoy_src_rpm}"*.rpm | cpio -iv --to-stdout "${envoy_src_tar}" > "${envoy_src_tar}"
+if [ ! -s "${envoy_src_tar}" ]; then
+echo "Failed to extract non-empty ${envoy_src_tar} from ${envoy_src_rpm} source RPM" >&2
+echo "Source RPM contents:" >&2
+rpm2cpio "${envoy_src_rpm}"*.rpm | cpio -t >&2
+exit 1
+fi
+echo "Validating ${envoy_src_tar}"
+bzip2 -t "${envoy_src_tar}"
+echo "Unpacking ${envoy_src_tar}"
+tar -xjf "${envoy_src_tar}"
+
+export LOCAL_ENVOY_PROJECT=${PWD}/${envoy_src_dir}
+echo "Using Envoy source directory: ${LOCAL_ENVOY_PROJECT}"
+
+chmod +x build_istio_proxy.sh
+./build_istio_proxy.sh %{version}
+
+%install
+rm -rf ${RPM_BUILD_ROOT}
+install -d -m755 ${RPM_BUILD_ROOT}/usr/local/bin
+install -d -m755 ${RPM_BUILD_ROOT}%{envoy_libdir}
+
+function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+if [[ $(version "%{version}") -ge $(version "1.17.0") ]]; then
+cp -pav ./bazel-bin/envoy ${RPM_BUILD_ROOT}/usr/local/bin
+else
+cp -pav ./bazel-bin/src/envoy/envoy ${RPM_BUILD_ROOT}/usr/local/bin
+fi
+
+%files
+/usr/local/bin/envoy
+%license LICENSE THIRD_PARTY_LICENSES.txt
+
+%changelog
+* Tue Apr 07 2026 Oracle Cloud Native Environment Authors <noreply@oracle.com> - 1.27.9-1
+- Added Oracle Specific Build Files for istio/proxy
