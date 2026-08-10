@@ -1,0 +1,34 @@
+diff --git .bazelrc .bazelrc
+index 364b1971..5359bb90 100644
+--- .bazelrc
++++ .bazelrc
+@@ -14,7 +14,7 @@ build:remote --remote_timeout=7200
+ # ========================================
+ 
+ # Enable libc++ and C++20 by default.
+-build:linux --config=libc++20
++#build:linux --config=libc++20
+ 
+ # put /usr/local/bin before /usr/bin to avoid picking up wrong python3.6 when building envoy.tls.key_providers.cryptomb
+ build:linux --action_env=PATH=/usr/lib/llvm/bin:/usr/local/bin:/bin:/usr/bin
+@@ -42,13 +42,19 @@ build:release --strip=always
+ build:release-symbol -c opt
+ 
+ # Debug builds
+-build:debug -c dbg
++#build:debug -c dbg
+
+ # Add compile option for all C++ files
+ # TODO(kuat) re-enable after fixing upstream dd/tracing-lib.
+ # build --cxxopt -Wnon-virtual-dtor
+ build --cxxopt -Wformat
+ build --cxxopt -Wformat-security
++build --cxxopt -Wno-range-loop-analysis
++build --cxxopt --no-warnings
++build --cxxopt -Wno-missing-field-initializers
++build --cxxopt -w
++build --linkopt=-fuse-ld=lld
++build --host_linkopt=-fuse-ld=lld
+
+ build:clang --host_action_env=CC=
+ build:clang --host_action_env=CXX=
