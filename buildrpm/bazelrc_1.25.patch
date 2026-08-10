@@ -1,0 +1,15 @@
+diff --git .bazelrc .bazelrc
+index 364b1971..5359bb90 100644
+--- .bazelrc
++++ .bazelrc
+@@ -24 +24 @@
+-build:linux --config=clang
++#build:linux --config=clang
+@@ -59 +59 @@
+-build:debug -c dbg
++#build:debug -c dbg
+@@ -65,0 +66,4 @@
++build --cxxopt -Wno-range-loop-analysis
++build --cxxopt --no-warnings
++build --cxxopt -Wno-missing-field-initializers
++build --cxxopt -w

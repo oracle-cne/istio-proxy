@@ -1,0 +1,32 @@
+diff --git Makefile.core.mk Makefile.core.mk
+index a8d71344..569b77ec 100644
+--- Makefile.core.mk
++++ Makefile.core.mk
+@@ -27,0 +28,8 @@
++ifeq "$(origin CC)" "default"
++CC := clang
++endif
++ifeq "$(origin CXX)" "default"
++CXX := clang++
++endif
++PATH := /usr/bin:$(PATH)
++
+@@ -55,0 +64 @@
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && \
+@@ -86,0 +96 @@
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && \
+@@ -89 +99 @@
+-	  bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TEST_TARGETS); \
++	  export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TEST_TARGETS); \
+@@ -114 +124 @@
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh
+@@ -117 +127 @@
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i
+@@ -122 +132 @@
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
+@@ -125 +135 @@
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
