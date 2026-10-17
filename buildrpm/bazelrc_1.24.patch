@@ -1,0 +1,32 @@
+diff --git .bazelrc .bazelrc
+index 549cecdd..cc0adab4 100644
+--- .bazelrc
++++ .bazelrc
+@@ -14,7 +14,7 @@ build:remote --remote_timeout=7200
+ # ========================================
+ 
+ # Enable libc++ and C++20 by default.
+-build:linux --config=libc++20
++# build:linux --config=libc++20
+ 
+ # Need for CI image to pickup docker-credential-gcloud, PATH is fixed in rbe-toolchain-* configs.
+ build:remote-ci --action_env=PATH=/usr/local/google-cloud-sdk/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/llvm/bin
+@@ -39,13 +39,17 @@ build:release --strip=always
+ build:release-symbol -c opt
+
+ # Debug builds
+-build:debug -c dbg
++# build:debug -c dbg
+
+ # Add compile option for all C++ files
+ # TODO(kuat) re-enable after fixing upstream dd/tracing-lib.
+ # build --cxxopt -Wnon-virtual-dtor
+ build --cxxopt -Wformat
+ build --cxxopt -Wformat-security
++build --cxxopt -Wno-range-loop-analysis
++build --cxxopt --no-warnings
++build --cxxopt -Wno-missing-field-initializers
++build --cxxopt -w
+
+ build:clang --host_action_env=CC=
+ build:clang --host_action_env=CXX=
