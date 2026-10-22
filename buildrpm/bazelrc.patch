@@ -1,0 +1,15 @@
+diff --git .bazelrc .bazelrc
+index 210fd1d3..8b735037 100644
+--- .bazelrc
++++ .bazelrc
+@@ -45,6 +45,10 @@ build:debug -c dbg
+ # build --cxxopt -Wnon-virtual-dtor
+ build --cxxopt -Wformat
+ build --cxxopt -Wformat-security
++build --cxxopt -Wno-range-loop-analysis
++build --cxxopt --no-warnings
++build --cxxopt -Wno-missing-field-initializers
++build --cxxopt -w
+
+ # Link pthread for flatbuffers
+ build --host_linkopt=-pthread
