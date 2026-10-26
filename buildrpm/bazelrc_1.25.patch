@@ -1,4 +1,4 @@
-diff --git .bazelrc .bazelrc
+{{{- $version := printf "%s.%s.%s" .major .minor .patch -}}}{{{if semverCompare "<1.27.0" $version}}}diff --git .bazelrc .bazelrc
 index 364b1971..5359bb90 100644
 --- .bazelrc
 +++ .bazelrc
@@ -30,3 +30,19 @@ index 364b1971..5359bb90 100644
 
  build:clang --host_action_env=CC=
  build:clang --host_action_env=CXX=
+{{{else}}}diff --git .bazelrc .bazelrc
+index 364b1971..5359bb90 100644
+--- .bazelrc
++++ .bazelrc
+@@ -{{{if semverCompare "<1.29.0" $version}}}17 +17{{{else}}}24 +24{{{end}}} @@
+-build:linux --config=clang
++#build:linux --config=clang
+@@ -{{{if semverCompare "<1.29.0" $version}}}45 +45{{{else}}}59 +59{{{end}}} @@
+-build:debug -c dbg
++#build:debug -c dbg
+@@ -{{{if semverCompare "<1.29.0" $version}}}51,0 +52,4{{{else}}}65,0 +66,4{{{end}}} @@ build --cxxopt -Wformat-security
++build --cxxopt -Wno-range-loop-analysis
++build --cxxopt --no-warnings
++build --cxxopt -Wno-missing-field-initializers
++build --cxxopt -w
+{{{end}}}
