@@ -25,20 +25,15 @@ index a8d71344..569b77ec 100644
  	bazel $(BAZEL_STARTUP_ARGS) build $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TARGETS)
  
  build_envoy: BAZEL_CONFIG_CURRENT = $(BAZEL_CONFIG_REL)
-@@ -84,9 +93,10 @@ gen-check:
- 	@scripts/gen-testdata.sh -c
- 
- test:
+@@ -80,3 +89,4 @@
+-test:
+-	bazel $(BAZEL_STARTUP_ARGS) build $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(TEST_ENVOY_TARGET)
+-	if [ -n "$(E2E_TEST_TARGETS)" ]; then \
++test:
 +	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && \
- 	bazel $(BAZEL_STARTUP_ARGS) build $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(TEST_ENVOY_TARGET) $(BAZEL_TEST_TARGETS)
- 	if [ -n "$(BAZEL_TEST_TARGETS)" ]; then \
--	  bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TEST_TARGETS); \
-+	  export PATH=$(PATH) CC=$(CC) CXX=$(CXX) && bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(BAZEL_TEST_TARGETS); \
- 	fi
- 	if [ -n "$(E2E_TEST_TARGETS)" ]; then \
-	  env ENVOY_DEBUG=$(TEST_ENVOY_DEBUG) ENVOY_PATH=$(shell bazel $(BAZEL_STARTUP_ARGS) info $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) bazel-bin)/envoy $(E2E_TEST_ENVS) GO111MODULE=on go test -timeout 30m $(E2E_TEST_FLAGS) $(E2E_TEST_TARGETS); \
-@@ -111,18 +121,18 @@ lint: lint-copyright-banner format-go lint-go tidy-go lint-scripts gen-extension
- 
++	bazel $(BAZEL_STARTUP_ARGS) build $(BAZEL_BUILD_ARGS) $(BAZEL_CONFIG_CURRENT) -- $(TEST_ENVOY_TARGET)
++	if [ -n "$(E2E_TEST_TARGETS)" ]; then \
+@@ -112,17 +122,17 @@
  test_release:
  ifeq "$(shell uname -m)" "x86_64"
 -	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh
@@ -51,12 +46,12 @@ index a8d71344..569b77ec 100644
  
  push_release:
  ifeq "$(shell uname -m)" "x86_64"
--	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
-+	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_R2_PATH)" ${PUSH_RELEASE_FLAGS}
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -d "$(RELEASE_R2_PATH)" ${PUSH_RELEASE_FLAGS}
  else
  	# Only x86 has support for legacy GLIBC, otherwise pass -i to skip the check
--	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
-+	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_GCS_PATH)" ${PUSH_RELEASE_FLAGS}
+-	export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_R2_PATH)" ${PUSH_RELEASE_FLAGS}
++	export PATH=$(PATH) CC=$(CC) CXX=$(CXX) export BAZEL_BUILD_ARGS="$(BAZEL_BUILD_ARGS)" && ./scripts/release-binary.sh -i -d "$(RELEASE_R2_PATH)" ${PUSH_RELEASE_FLAGS}
  endif
  
  # Used by build container to export the build output from the docker volume cache

@@ -35,7 +35,7 @@ BuildRequires:  autoconf
 BuildRequires:  autoconf-archive
 BuildRequires:  autogen
 BuildRequires:  libtool
-BuildRequires:  libatomic-static
+BuildRequires:  gcc-toolset-13-libatomic-devel
 BuildRequires:  libstdc++-static
 BuildRequires:  libstdc++-devel
 BuildRequires:  gcc-c++
