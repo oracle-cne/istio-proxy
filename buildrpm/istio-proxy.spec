@@ -11,6 +11,7 @@
 %endif
 
 %global envoy_libdir /var/lib/istio/envoy
+%global envoy_srcdir /opt/istio-envoy
 %global _buildhost   build-ol%{?oraclelinux}-%{?_arch}.oracle.com
 
 
@@ -47,6 +48,7 @@ BuildRequires:  git
 BuildRequires:  java-21-openjdk-devel
 BuildRequires:  tzdata-java
 BuildRequires:  bazel = 8.7.0
+BuildRequires:  istio-envoy = %{version}
 BuildRequires:  ninja-build
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -80,33 +82,8 @@ proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
 alternatives --set python /usr/bin/python2
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 export GOROOT=/usr/bin/go
-echo "Querying istio-envoy 1.31 source RPM versions"
-envoy_src_rpm_version=$(repoquery --show-duplicates 'istio-envoy-1.31.*' -q --qf "%%{version}-%%{release}" | tail -1)
-if [ -z "${envoy_src_rpm_version}" ]; then
-echo "No matching istio-envoy-1.31.* package found in configured repositories" >&2
-exit 1
-fi
-envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
-envoy_src_dir="istio-envoy-${envoy_src_rpm_version%%-*}"
-envoy_src_tar="${envoy_src_dir}.tar.bz2"
-echo "Selected istio-envoy source RPM: ${envoy_src_rpm}"
-echo "Expected istio-envoy source archive inside RPM: ${envoy_src_tar}"
-yumdownloader --source "${envoy_src_rpm}"
-echo "Extracting ${envoy_src_tar} from ${envoy_src_rpm} source RPM"
-rpm2cpio "${envoy_src_rpm}"*.rpm | cpio -iv --to-stdout "${envoy_src_tar}" > "${envoy_src_tar}"
-if [ ! -s "${envoy_src_tar}" ]; then
-echo "Failed to extract non-empty ${envoy_src_tar} from ${envoy_src_rpm} source RPM" >&2
-echo "Source RPM contents:" >&2
-rpm2cpio "${envoy_src_rpm}"*.rpm | cpio -t >&2
-exit 1
-fi
-echo "Validating ${envoy_src_tar}"
-bzip2 -t "${envoy_src_tar}"
-echo "Unpacking ${envoy_src_tar}"
-tar -xjf "${envoy_src_tar}"
-
-export LOCAL_ENVOY_PROJECT=${PWD}/${envoy_src_dir}
-echo "Using Envoy source directory: ${LOCAL_ENVOY_PROJECT}"
+export LOCAL_ENVOY_PROJECT=%{envoy_srcdir}
+echo "Using installed istio-envoy source tree: ${LOCAL_ENVOY_PROJECT}"
 
 chmod +x build_istio_proxy.sh
 ./build_istio_proxy.sh %{version}
