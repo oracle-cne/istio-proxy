@@ -72,7 +72,11 @@ BuildRequires:  autoconf
 BuildRequires:  autoconf-archive
 BuildRequires:  autogen
 BuildRequires:  libtool
+{{{- if semverCompare ">=1.31.0" $version }}}
+BuildRequires:  gcc-toolset-13-libatomic-devel
+{{{- else }}}
 BuildRequires:  libatomic-static
+{{{- end }}}
 BuildRequires:  libstdc++-static
 BuildRequires:  libstdc++-devel
 BuildRequires:  gcc-c++
