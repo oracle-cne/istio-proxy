@@ -50,33 +50,51 @@ Patch1:         bazelrc_1.25.patch
 {{{- end }}}
 {{{- end }}}
 
+{{{- if semverCompare ">=1.29.0" $version }}}
+Patch2:         WORKSPACE_1.25.patch
+{{{- end }}}
+
 {{{- if semverCompare "<1.22.0" $version }}}
 BuildRequires:  lld = 9.0.1
 BuildRequires:  llvm-toolset = 9.0.1
 BuildRequires:  clang = 9.0.1
-{{{- else }}}
+{{{- else if semverCompare "<1.29.0" $version }}}
 BuildRequires:  lld = 13.0.1
 BuildRequires:  llvm-toolset = 13.0.1
 BuildRequires:  clang = 13.0.1
+{{{- else }}}
+BuildRequires:  lld = 18.1.8
+BuildRequires:  llvm-toolset = 18.1.8
+BuildRequires:  clang = 18.1.8
 {{{- end }}}
 BuildRequires:  automake
 BuildRequires:  autoconf
+BuildRequires:  autoconf-archive
 BuildRequires:  autogen
 BuildRequires:  libtool
 BuildRequires:  libatomic-static
 BuildRequires:  libstdc++-static
+BuildRequires:  libstdc++-devel
 BuildRequires:  gcc-c++
 BuildRequires:  perl
 BuildRequires:  cmake3 = 3.11.4
 BuildRequires:  python2
 BuildRequires:  python3
 BuildRequires:  git
+{{{- if semverCompare "<1.29.0" $version }}}
 BuildRequires:  java-11-openjdk-devel
+{{{- else }}}
+BuildRequires:  java-21-openjdk-devel
+{{{- end }}}
 BuildRequires:  tzdata-java
 {{{- if and (semverCompare ">=1.18.0" $version) (semverCompare "<1.22.0" $version) }}}
 BuildRequires:  bazel = 6.3.2
-{{{- else }}}
+{{{- else if semverCompare "<1.29.0" $version }}}
 BuildRequires:  bazel = 6.5.0
+{{{- else if semverCompare "<1.31.0" $version }}}
+BuildRequires:  bazel = 7.7.1
+{{{- else }}}
+BuildRequires:  bazel = 8.7.0
 {{{- end }}}
 BuildRequires:  ninja-build
 BuildRequires:  autoconf
@@ -84,6 +102,7 @@ BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  golang
 BuildRequires:  wget
+BuildRequires:  ncurses-compat-libs
 
 
 %description
@@ -106,26 +125,50 @@ proxy is the proxy required by the Istio Pilot Agent that talks to Istio pilot
 {{{- if semverCompare "<1.15.1 || >= 1.16.2" $version }}}
 %patch1
 {{{- end }}}
+{{{- if semverCompare ">=1.29.0" $version }}}
+%patch2
+{{{- end }}}
 
 %build
 alternatives --set python /usr/bin/python2
+{{{- if semverCompare "<1.29.0" $version }}}
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+{{{- else }}}
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+{{{- end }}}
 export GOROOT=/usr/bin/go
 
 {{{- if or (semverCompare "<1.10" $version) (semverCompare ">=1.15.0" $version) }}}
-mkdir -p /tmp/envoy-src
-envoy_src_rpm_version=$(repoquery --show-duplicates  istio-envoy-{{{.major}}}.{{{.minor}}}.*  -q --qf "%{version}" | tail -1)
+echo "Querying istio-envoy {{{.major}}}.{{{.minor}}} source RPM versions"
+envoy_src_rpm_version=$(repoquery --show-duplicates 'istio-envoy-{{{.major}}}.{{{.minor}}}.*' -q --qf "%%{version}-%%{release}" | tail -1)
+if [ -z "${envoy_src_rpm_version}" ]; then
+echo "No matching istio-envoy-{{{.major}}}.{{{.minor}}}.* package found in configured repositories" >&2
+exit 1
+fi
 envoy_src_rpm="istio-envoy-${envoy_src_rpm_version}"
-pushd /tmp/envoy-src
-yumdownloader --source istio-envoy-%{version}-%{release}
-rpm2cpio ${envoy_src_rpm}*.rpm|cpio -iv --to-stdout ${envoy_src_rpm}.tar.bz2 > ${envoy_src_rpm}.tar.bz2
-tar -xjvf ${envoy_src_rpm}.tar.bz2
-popd
+envoy_src_dir="istio-envoy-${envoy_src_rpm_version%%-*}"
+envoy_src_tar="${envoy_src_dir}.tar.bz2"
+echo "Selected istio-envoy source RPM: ${envoy_src_rpm}"
+echo "Expected istio-envoy source archive inside RPM: ${envoy_src_tar}"
+yumdownloader --source "${envoy_src_rpm}"
+echo "Extracting ${envoy_src_tar} from ${envoy_src_rpm} source RPM"
+rpm2cpio "${envoy_src_rpm}"*.rpm | cpio -iv --to-stdout "${envoy_src_tar}" > "${envoy_src_tar}"
+if [ ! -s "${envoy_src_tar}" ]; then
+echo "Failed to extract non-empty ${envoy_src_tar} from ${envoy_src_rpm} source RPM" >&2
+echo "Source RPM contents:" >&2
+rpm2cpio "${envoy_src_rpm}"*.rpm | cpio -t >&2
+exit 1
+fi
+echo "Validating ${envoy_src_tar}"
+bzip2 -t "${envoy_src_tar}"
+echo "Unpacking ${envoy_src_tar}"
+tar -xjf "${envoy_src_tar}"
 
-export LOCAL_ENVOY_PROJECT=/tmp/envoy-src/${envoy_src_rpm}
+export LOCAL_ENVOY_PROJECT=${PWD}/${envoy_src_dir}
+echo "Using Envoy source directory: ${LOCAL_ENVOY_PROJECT}"
 {{{- end }}}
 
-{{{- if semverCompare ">=1.22.0" $version }}}
+{{{- if and (semverCompare ">=1.22.0" $version) (semverCompare "<1.29.0" $version) }}}
 ln -s /usr/lib64/libatomic.so.1.2.0 /usr/lib64/libatomic.so
 {{{- end }}}
 
