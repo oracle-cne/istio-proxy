@@ -1,0 +1,61 @@
+#!/bin/bash -ex
+
+function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+istio_version=${1}
+# Link ninja-build because envoy expects the binary name to be `ninja`. Using a Link to ensure
+# subsequent bash shells also have the mapping
+if [ ! -f /usr/bin/ninja ]; then
+  ln /usr/bin/ninja-build /usr/bin/ninja
+fi
+
+cpu_count="18"
+if [[ $(version $istio_version) -ge $(version "1.18.0") ]]; then
+    # Reduced cpu_count/parallelism to avoid build failures on running out of memory
+    cpu_count="16"
+fi
+
+BAZEL_BUILD=' --repo_env=BAZEL_USE_HOST_SYSROOT=True --config=libstdc++ --local_cpu_resources='$cpu_count' --copt=-DENVOY_IGNORE_GLIBCXX_USE_CXX11_ABI_ERROR=1 --verbose_failures --copt=-DNDEBUG --define=wasm=disabled'
+echo "Using Bazel host C++ toolchain discovery with system headers"
+BAZEL_TARGETS=//:envoy
+if [[ $(version $istio_version) -lt $(version "1.10.0")  \
+     ||  $(version $istio_version) -ge $(version "1.15.0") ]]; then
+    ENVOY_REPO=--override_repository=envoy="${LOCAL_ENVOY_PROJECT}"
+    BAZEL_BUILD_ARGS="$ENVOY_REPO$BAZEL_BUILD"
+else
+    BAZEL_BUILD_ARGS="$BAZEL_BUILD"
+fi
+BAZEL_BUILD_LOG="/tmp/build.log"
+export BAZEL_BUILD_ARGS
+export BAZEL_TARGETS
+
+if [[ -f ~/.npmrc ]]; then
+    cp -f ~/.npmrc /mnt/.npmrc
+fi
+export HOME=/mnt
+
+ENVOY_BIN=./bazel-bin/src/envoy/envoy
+if [[ $(version $istio_version) -ge $(version "1.17.0") ]]; then
+    ENVOY_BIN=./bazel-bin/envoy
+fi
+
+# Build istio proxy
+## Added workaround for jenkins build failure,
+## 'FATAL: Attempted to kill stale server process (pid=365) using SIGKILL, but it did not die in a timely fashion.'
+nohup make VERBOSE=1 build -j${cpu_count} > $BAZEL_BUILD_LOG 2>&1 | tail -f $BAZEL_BUILD_LOG &
+# There are 'build success' messages in-between, so, check the last line of log file for success completion.
+# And, precense of envoy binary doesn't mean the build completion.
+while [[ ! (((-f $ENVOY_BIN) \
+                && $(tail -n 2 $BAZEL_BUILD_LOG|grep "Build completed successfully")) \
+        || $(cat $BAZEL_BUILD_LOG | grep "Build did NOT complete successfully")) ]]; do
+    sleep 60
+done
+
+set +e
+ps ax | grep bazel | grep -v color=auto | awk '{print $1}'|xargs kill -9
+set -e
+
+if grep -q "Build did NOT complete successfully" "${BAZEL_BUILD_LOG}"; then
+    echo "Bazel build failed; refusing to continue without ${ENVOY_BIN}" >&2
+    exit 1
+fi
