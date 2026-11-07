@@ -1,0 +1,18 @@
+diff --git WORKSPACE WORKSPACE
+index 817e1740..fc4a4d36 100644
+--- WORKSPACE
++++ WORKSPACE
+@@ -85,10 +85,6 @@ load("@envoy//bazel:repo.bzl", "envoy_repo")
+ 
+ envoy_repo()
+ 
+-load("@envoy//bazel:toolchains.bzl", "envoy_toolchains")
+-
+-envoy_toolchains()
+-
+-load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")
+-
+-llvm_register_toolchains()
++# Oracle Linux RPM builds use Bazel host C++ toolchain discovery.
++# The generated Envoy LLVM toolchain selects libc++ include paths that
++# are not provided by the OL8 system packages.
